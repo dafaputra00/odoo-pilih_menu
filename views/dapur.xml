@@ -1,0 +1,190 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <data noupdate="0">
+
+
+
+
+    <record id="view_dapur_form" model="ir.ui.view">
+        <field name="name">dapur.view.form</field>
+        <field name="model">dapur.order</field>
+        <field name="arch" type="xml">
+            <form string="Point of Sale Quotations" create="false">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed" />
+                </header>
+                <sheet>
+                <group col="4" colspan="4" name="order_fields">
+                    <field name="name"/>
+                    <!-- <field name="date_order"/> -->
+                    <field name="table_id" />
+                    <!-- <field name="partner_id" /> -->
+                    <!-- <field name="phone"/> -->
+                    <field name="state_dapur"/>
+                    <field name="date_quotation"/>
+                    <!-- <field name="pickup_date"/>
+                    <field name="deliver_date"/> -->
+                    <!-- <field name="pricelist_id" />
+                    <field name="delivery_address" /> -->
+                </group>
+                <notebook colspan="4">
+                    <page string="Products">
+                        <field name="lines" colspan="4" nolabel="1">
+                            <tree string="Order lines" editable="bottom">
+                                <field name="product_id"/>
+                                <field name="qty"/>
+                                <!-- <field name="price_unit" widget="monetary"/>
+                                <field name="discount" widget="monetary"/>
+                                <field name="tax_ids_after_fiscal_position" widget="many2many_tags"/>
+                                <field name="tax_ids" invisible="1"/>
+                                <field name="price_subtotal" widget="monetary"/>
+                                <field name="price_subtotal_incl" widget="monetary"/> -->
+                            </tree>
+                            <form string="Order lines">
+                                <group col="4">
+                                    <field name="product_id"/>
+                                    <field name="qty"/>
+                                    <field name="state" />
+                                    <!-- <field name="discount" widget="monetary"/>
+                                    <field name="price_unit" widget="monetary"/>
+                                    <field name="price_subtotal" invisible="1" widget="monetary"/>
+                                    <field name="price_subtotal_incl" invisible="1" widget="monetary"/>
+                                    <field name="tax_ids_after_fiscal_position" widget="many2many_tags"/>
+                                    <field name="tax_ids" invisible="1"/>
+                                    <field name="notice"/> -->
+                                </group>
+                            </form>
+                        </field>
+                        <!-- <group class="oe_subtotal_footer oe_right" colspan="2" name="order_total">
+                            <field name="amount_tax" widget="monetary"/>
+                            <div class="oe_subtotal_footer_separator oe_inline">
+                                <label for="amount_total" />
+                                <button name="button_dummy" string="(update)" class="oe_edit_only oe_link"/>
+                            </div>
+                            <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary"/>
+                        </group>
+                        <div class="oe_clear"/> -->
+                    </page>
+                    <!-- <page string="Notes" >
+                        <field name="note"/>
+                    </page> -->
+                </notebook>
+            </sheet>
+            </form>
+        </field>
+    </record>
+
+
+
+    <record id="view_dapur_tree" model="ir.ui.view">
+        <field name="name">dapur.view.tree</field>
+        <field name="model">dapur.order</field>
+        <field name="arch" type="xml">
+            <tree string="POS Orders">
+                <field name="name"/>
+                <!-- <field name="date_order"/> -->
+                <field name="table_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="view_dapur_kanban" model="ir.ui.view">
+        <field name="name">dapur.view.kanban</field>
+        <field name="model">dapur.order</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" create="0">
+                <field name="name"/>
+                <field name="date_quotation"/>
+                <field name="table_id"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title"><span><t t-esc="record.table_id.value"/></span></strong>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-8 text-muted">
+                                    <span><t t-esc="record.date_quotation.value"/></span>
+                                </div>
+                                <!-- <div class="col-4">
+                                    <span class="float-right text-right">
+                                        <field name="state" widget="label_selection" options="{'classes': {'draft': 'default',
+                                        'invoiced': 'success', 'cancel': 'danger'}}"/>
+                                    </span>
+                                </div> -->
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <record id="pos_order_action" model="ir.actions.act_window">
+        <field name="name">Tampilan Dapur</field>
+        <field name="res_model">dapur.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_id" ref="view_dapur_kanban"></field>
+        <field name="domain"></field>
+    </record>
+
+    <record id="action_kanban_view_dapur" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="view_dapur_kanban"/>
+        <field name="act_window_id" ref="pos_order_action"/>
+    </record>
+
+    <record id="action_tree_view_dapur" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_dapur_tree"/>
+        <field name="act_window_id" ref="pos_order_action"/>
+    </record>
+
+    <record id="action_form_view_dapur" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_dapur_form"/>
+        <field name="act_window_id" ref="pos_order_action"/>
+    </record>
+    
+    <record id="seq_dapur_order" model="ir.sequence">
+        <field name="name">POS Quotation</field>
+        <field name="code">dapur.order</field>
+        <field name="prefix">POS/D/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False" />
+    </record>
+<!-- 
+    <record id="kitchen_view_dashboard" model="ir.ui.view">
+        <field name="name">Dasboard view</field>
+        <field name="model">board.board</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="My Dasboard">
+                <board style="1">
+                    <column>
+                        <action
+                            string="Daftar Pesanan"
+                            name="%(pilih_menu.pos_order_action)"
+                        />
+                    </column>
+                </board>
+            </form>
+        </field>
+    </record> -->
+
+
+    <menuitem id="dasboard_kitchen" name="Tampilan Dapur" action="pos_order_action"/>
+
+
+    </data>
+</odoo>
