@@ -22,6 +22,7 @@ class PosOrder(models.Model):
         orders_to_save = [o for o in orders if o['data']['name'] not in existing_references]
         order_ids = []
         quot_ids = []
+        kitchen_ids = []
         for tmp_order in orders_to_save:
             to_invoice = tmp_order['to_invoice']
             order = tmp_order['data']
@@ -34,7 +35,7 @@ class PosOrder(models.Model):
             order_ids.append(pos_order.id)
             if pos_order.dapur_ref:
                 pos_order.dapur_ref.write({'state': 'confirmed'})
-                quot_ids.append(pos_order.dapur_ref.id)
+                kitchen_ids.append(pos_order.dapur_ref.id)
             order_ids.append(pos_order.id)
 
             try:
@@ -48,7 +49,7 @@ class PosOrder(models.Model):
                 pos_order.action_pos_order_invoice()
                 pos_order.invoice_id.sudo().action_invoice_open()
                 pos_order.account_move = pos_order.invoice_id.move_id
-        return order_ids, quot_ids
+        return order_ids, quot_ids, kitchen_ids
 
     @api.model
     def _order_fields(self, ui_order):
@@ -57,5 +58,11 @@ class PosOrder(models.Model):
         if 'quotation_ref' in ui_order:
             if ui_order['quotation_ref']:
                 quot_id = ui_order.get('quotation_ref')['id']
-        order_fields['dapur_ref'] = quot_id
+        order_fields['book_ref'] = quot_id
+
+        kitchen_id = False
+        if 'quotation_ref' in ui_order:
+            if ui_order['quotation_ref']:
+                kitchen_id = ui_order.get('quotation_ref')['id']
+        order_fields['dapur_ref'] = kitchen_id
         return order_fields

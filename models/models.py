@@ -54,14 +54,47 @@ class dapur(models.Model):
     # pricelist_id = fields.Many2one('product.pricelist', string='Pricelist',
     #                                default=_default_pricelist)
 
+    # orderan = fields.Many2one('pos.order', string='Orderan')
+    # status_order = fields.Selection(string='status bayar', related="orderan.state")
+
+
+    # @api.onchange('status_order')
+    # def cekBayar(self):
+    #     if self.status_order == 'paid':
+    #         self.write({'state_order', '=', False})
 
     @api.model
     def create_from_ui(self, orders):
         """Method to create booking order"""
-        order_id = self.create(self._order_fields(orders))
-        order = {'id': order_id.id,
-                 'name': order_id.name}
-        return order
+
+        # import pdb; pdb.set_trace()
+        list_order = self.env['dapur.order'].search([('state_dapur', '=', True)])
+        cek_order = self._order_fields(orders)
+        print(cek_order['table_id'])
+        for i in list_order:
+            print(i.table_id.id)
+            exist = i.table_id.id == cek_order['table_id']
+            if exist:
+                #untuk menggantikan orderan yang sudah ada
+                # belum jadi
+                i = self.write(self._order_fields(orders))
+                order = {'id': i.id,
+                        'name': i.name}
+                return order
+                break
+            else:
+                order_id = self.create(self._order_fields(orders))
+                order = {'id': order_id.id,
+                        'name': order_id.name}
+                return order
+                break
+
+
+
+        # order_id = self.create(self._order_fields(orders))
+        # order = {'id': order_id.id,
+        #          'name': order_id.name}
+        # return order
 
 
     @api.model
