@@ -70,24 +70,30 @@ class dapur(models.Model):
         # import pdb; pdb.set_trace()
         list_order = self.env['dapur.order'].search([('state_dapur', '=', True)])
         cek_order = self._order_fields(orders)
-        print(cek_order['table_id'])
-        for i in list_order:
-            print(i.table_id.id)
-            exist = i.table_id.id == cek_order['table_id']
+        for list in list_order:
+            exist = list.table_id.id == cek_order['table_id']
             if exist:
                 #untuk menggantikan orderan yang sudah ada
-                # belum jadi
-                i = self.write(self._order_fields(orders))
-                order = {'id': i.id,
-                        'name': i.name}
+                # update : unlink dulu terus add
+                # problem : Kalau setiap item ada status (dimasak, selesai), nanti statusnya ilang
+
+
+                # i.write({'lines': cek_order['lines']})
+                # i.lines = self.write({'lines': cek_order['lines']})
+                list.lines.unlink()
+                list.lines = cek_order['lines']
+                list_id = list.id
+                list_name = list.name
+                order = {'id': list_id,
+                        'name': list_name}
                 return order
                 break
-            else:
-                order_id = self.create(self._order_fields(orders))
-                order = {'id': order_id.id,
-                        'name': order_id.name}
-                return order
-                break
+        if not exist:
+            order_id = self.create(self._order_fields(orders))
+            order = {'id': order_id.id,
+                    'name': order_id.name}
+            return order
+                
 
 
 
