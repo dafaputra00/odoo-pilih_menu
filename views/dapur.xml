@@ -84,7 +84,7 @@
                 <field name="name"/>
                 <!-- <field name="date_order"/> -->
                 <field name="table_id"/>
-                <field name="state"/>
+                <field name="date_quotation"/>
             </tree>
         </field>
     </record>
@@ -132,6 +132,16 @@
         <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="view_id" ref="view_dapur_kanban"></field>
+        <field name="domain">[('state_dapur', '=', True)]</field>
+    </record>
+
+    
+    <record id="pos_order_action_all" model="ir.actions.act_window">
+        <field name="name">Tampilan Dapur</field>
+        <field name="res_model">dapur.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_id" ref="view_dapur_tree"></field>
         <field name="domain"></field>
     </record>
 
@@ -183,7 +193,22 @@
     </record> -->
 
 
-    <menuitem id="dasboard_kitchen" name="Tampilan Dapur" action="pos_order_action"/>
+    <menuitem 
+        id="dasboard_kitchen" 
+        name="Tampilan Dapur" 
+        action="pos_order_action"/>
+
+    <menuitem
+        id="dashboard_kitchen_all"
+        name="Semua Pesanan"
+        parent="dasboard_kitchen"
+        action="pos_order_action_all"/>
+
+    <menuitem
+        id="dashboard_kitchen_active"
+        name="Pesanan aktif"
+        parent="dasboard_kitchen"
+        action="pos_order_action"/>
 
 
     </data>

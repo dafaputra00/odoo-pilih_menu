@@ -6,6 +6,7 @@
                 <!-- <script type="text/javascript" src="/pilih_menu/static/src/js/discBtn.js"></script> -->
                 <script type="text/javascript" src="/pilih_menu/static/src/js/kirimKeDapur.js"></script>
                 <script type="text/javascript" src="/pilih_menu/static/src/js/models.js"></script>
+                <script type="text/javascript" src="/pilih_menu/static/src/js/validate_order.js"></script>
                 <link rel="stylesheet" href="/pilih_menu/static/src/scss/gantiPriceTag.scss"/>
             </xpath>
         </template>
