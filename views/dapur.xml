@@ -82,6 +82,7 @@
         <field name="arch" type="xml">
             <tree string="POS Orders">
                 <field name="name"/>
+                <field name="pos_reference" />
                 <!-- <field name="date_order"/> -->
                 <field name="table_id"/>
                 <field name="date_quotation"/>

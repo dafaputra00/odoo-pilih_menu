@@ -9,12 +9,12 @@ odoo.define('dapur.validate_order', function(require) {
     screens.PaymentScreenWidget.include({
         validate_order: function() {
             this._super();
-            var meja = posmodel.table.id;
+            var order_ref = posmodel.get_order().name;
             // var meja_order = this.posmodel.get_table_order();
             rpc.query({
                 model: 'dapur.order',
                 method: 'ubahState',
-                args: [meja],
+                args: [order_ref],
             }).then(function() {
                 console.log("Harusnya Sukses")
             });

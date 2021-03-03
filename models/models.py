@@ -13,10 +13,12 @@ class dapur(models.Model):
             'lines': [process_line(l) for l in ui_order['lines']] if ui_order['lines'] else False,
             'table_id': ui_order['table_id'] or False,
             'state_dapur': ui_order['state_dapur'] or '',
+            'pos_reference': ui_order['name'],
         }
 
 
     name = fields.Char(string='Dapur Ref', required=True, readonly=True, copy=False, default='/')
+    pos_reference = fields.Char(string='Receipt Ref', readonly=True, copy=False)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True,
                                  default=lambda self: self.env.user.company_id)
     date_quotation = fields.Datetime(string='Quotation Date',
@@ -29,11 +31,11 @@ class dapur(models.Model):
     state_dapur = fields.Boolean('Kirim ke dapur', readonly=True)
 
     @api.model
-    def ubahState(self, meja):
-        # import pdb; pdb.set_trace()
+    def ubahState(self, order_ref):
+        import pdb; pdb.set_trace()
         list_order = self.env['dapur.order'].search([('state_dapur', '=', True)])
         for list in list_order:
-            if(meja == list.table_id.id):
+            if(order_ref == list.pos_reference):
                 list.state_dapur = False
                 break
 
@@ -41,12 +43,12 @@ class dapur(models.Model):
     def create_from_ui(self, orders):
         """Method to create booking order"""
 
-        # import pdb; pdb.set_trace()
+        import pdb; pdb.set_trace()
         list_order = self.env['dapur.order'].search([('state_dapur', '=', True)])
         cek_order = self._order_fields(orders)
         exist = False
         for list in list_order:
-            exist = list.table_id.id == cek_order['table_id']
+            exist = list.pos_reference == cek_order['pos_reference']
             if exist:
                 #untuk menggantikan orderan yang sudah ada
                 # update : unlink dulu terus add
