@@ -43,7 +43,9 @@ class dapur(models.Model):
     def create_from_ui(self, orders):
         """Method to create booking order"""
 
-        import pdb; pdb.set_trace()
+        # python debugging
+        # import pdb; pdb.set_trace() 
+        
         list_order = self.env['dapur.order'].search([('state_dapur', '=', True)])
         cek_order = self._order_fields(orders)
         exist = False
@@ -53,10 +55,6 @@ class dapur(models.Model):
                 #untuk menggantikan orderan yang sudah ada
                 # update : unlink dulu terus add
                 # problem : Kalau setiap item ada status (dimasak, selesai), nanti statusnya ilang
-
-
-                # i.write({'lines': cek_order['lines']})
-                # i.lines = self.write({'lines': cek_order['lines']})
                 list.lines.unlink()
                 list.lines = cek_order['lines']
                 list_id = list.id
