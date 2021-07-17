@@ -197,7 +197,8 @@
     <menuitem 
         id="dasboard_kitchen" 
         name="Tampilan Dapur" 
-        action="pos_order_action"/>
+        action="pos_order_action"
+        web_icon="pilih_menu,static/description/kitchen.png"/>
 
     <menuitem
         id="dashboard_kitchen_all"
